@@ -1,0 +1,8 @@
+# makepkg output
+src/
+pkg/
+*.pkg.tar.*
+*.tar.gz
+*.log
+# makepkg's bare clone of git sources
+dwlmsg/dwlmsg/

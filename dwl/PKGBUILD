@@ -1,0 +1,50 @@
+pkgname=dwl-accme
+pkgver=0.9
+pkgrel=1
+pkgdesc="dwl with personal patches, config.h and session script"
+arch=(x86_64)
+url="https://codeberg.org/dwl/dwl"
+license=(GPL-3.0-or-later)
+depends=(wlroots0.20 wayland libinput libxkbcommon libxcb xcb-util-wm xorg-xwayland dbus)
+makedepends=(wayland-protocols)
+provides=(dwl wayland-compositor)
+conflicts=(dwl)
+
+# Order matters: later patches apply on top of earlier ones.
+_patches=(
+  ipc.patch
+  gaps.patch
+  input-config.patch
+  layer-popups.patch
+  alwayscenter.patch
+  exclusive-focus.patch
+)
+source=("https://codeberg.org/dwl/dwl/releases/download/v$pkgver/dwl-v$pkgver.tar.gz"
+        config.h
+        dwl-session
+        dwl.desktop
+        "${_patches[@]}")
+# local files are tracked by git; only the upstream tarball is checked
+sha256sums=('51ed5da49942ca3272b6f2c4f1d7641b0b947a6eb1c264dce8a65b4d245596af'
+            SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+
+prepare() {
+  cd dwl-v$pkgver
+  for p in "${_patches[@]}"; do
+    patch -Np1 -i "$srcdir/$p"
+  done
+  cp "$srcdir/config.h" .
+}
+
+build() {
+  cd dwl-v$pkgver
+  make VERSION=$pkgver XWAYLAND=-DXWAYLAND XLIBS="xcb xcb-icccm"
+}
+
+package() {
+  cd dwl-v$pkgver
+  make PREFIX=/usr DESTDIR="$pkgdir" install
+  install -Dm755 "$srcdir/dwl-session" "$pkgdir/usr/bin/dwl-session"
+  # replaces upstream's dwl.desktop (Exec=dwl) with one that runs dwl-session
+  install -Dm644 "$srcdir/dwl.desktop" "$pkgdir/usr/share/wayland-sessions/dwl.desktop"
+}

@@ -1,0 +1,36 @@
+#!/bin/sh
+# Session entry point, started by the greeter through dwl.desktop.
+#
+# Host-specific setup stays out of this package:
+#   ~/.config/dwl/env        sourced before dwl starts (e.g. WLR_DRM_DEVICES)
+#   ~/.config/dwl/autostart  executable, run once dwl is up (outputs, qs, hypridle, ...)
+#
+# Anything started from autostart is in dwl's startup process group and gets
+# SIGTERM when dwl exits.
+
+export XDG_CURRENT_DESKTOP=dwl
+export XDG_SESSION_DESKTOP=dwl
+export XDG_SESSION_TYPE=wayland
+
+conf="${XDG_CONFIG_HOME:-$HOME/.config}/dwl"
+state="${XDG_STATE_HOME:-$HOME/.local/state}"
+mkdir -p "$state"
+
+[ -r "$conf/env" ] && . "$conf/env"
+
+# dwl writes its status to the startup command's stdin; nothing here reads
+# it, so close it or dwl blocks once the pipe buffer fills.
+# Portals are D-Bus activated by systemd and only see WAYLAND_DISPLAY through
+# the activation environment.
+dwl -s "
+  exec <&-
+  dbus-update-activation-environment --systemd \
+    WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
+  [ -x '$conf/autostart' ] && exec '$conf/autostart'
+" >"$state/dwl.log" 2>&1
+
+# Portals outlive the compositor and would keep a dead WAYLAND_DISPLAY.
+systemctl --user stop \
+  xdg-desktop-portal.service \
+  xdg-desktop-portal-wlr.service \
+  xdg-desktop-portal-gtk.service 2>/dev/null
