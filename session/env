@@ -1,0 +1,7 @@
+# Sourced by dwl-session before dwl starts. Exported variables reach dwl and
+# everything it spawns.
+
+export PATH="$HOME/.local/bin:$PATH"
+
+# Hybrid GPU laptops: run dwl on the iGPU (path from `ls -l /dev/dri/by-path`)
+# export WLR_DRM_DEVICES=/dev/dri/by-path/pci-0000:00:02.0-card

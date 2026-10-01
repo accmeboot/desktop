@@ -5,6 +5,7 @@ cd "$(dirname "$(readlink -f "$0")")"
 
 ./scripts/install-packages.sh
 ./scripts/link-scripts.sh
+./scripts/install-session.sh
 
 # Built on first install; afterwards only on request (e.g. after editing config.h).
 build=()

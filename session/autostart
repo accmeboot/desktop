@@ -1,0 +1,9 @@
+#!/bin/sh
+# Run by dwl-session once dwl is up. Background long-running programs with &;
+# they get SIGTERM when dwl exits.
+
+hypridle &
+# qs -c mesa-shell &
+
+# Outputs, e.g.:
+# wlr-randr --output DP-2 --mode 2560x1440@239.970001Hz

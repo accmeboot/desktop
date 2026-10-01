@@ -17,6 +17,15 @@ packages=(
   slurp
   wl-clipboard
   libnotify
+
+  # session
+  wlr-randr
+  hypridle
+  wlopm
+  xdg-desktop-portal
+  xdg-desktop-portal-wlr
+  xdg-desktop-portal-gtk
+  xdg-utils
 )
 
 # -Syu, not -S: installing against a stale package database is a partial upgrade.
