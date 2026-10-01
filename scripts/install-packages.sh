@@ -2,9 +2,10 @@
 set -euo pipefail
 
 packages=(
-  # makepkg
+  # makepkg, paru (less is its PKGBUILD review pager)
   base-devel
   git
+  less
 
   # used by config.h keybinds
   ghostty

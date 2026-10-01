@@ -4,6 +4,7 @@ set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 ./scripts/install-packages.sh
+./scripts/install-aur.sh
 ./scripts/link-scripts.sh
 ./scripts/install-session.sh
 
