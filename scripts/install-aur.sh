@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Never add --noconfirm or --skipreview here: reviewing each PKGBUILD (and its
-# diff on updates) is the only protection against malicious AUR packages.
 set -euo pipefail
 
 if [[ $EUID -eq 0 ]]; then
@@ -13,8 +11,6 @@ packages=(
 )
 
 if ! command -v paru &>/dev/null; then
-  # "paru", not "paru-bin": maintained by paru's author and built from his
-  # release tarball, while paru-bin is orphaned.
   tmp=$(mktemp -d)
   trap 'rm -rf "$tmp"' EXIT
   git clone --depth=1 https://aur.archlinux.org/paru.git "$tmp/paru"
@@ -24,9 +20,7 @@ if ! command -v paru &>/dev/null; then
     echo "skipping AUR packages: paru is not installed" >&2
     exit 0
   fi
-  # --rmdeps removes cargo again after the build
   (cd "$tmp/paru" && makepkg -si --rmdeps)
 fi
 
-# Already installed packages are skipped; updates come from `paru` itself.
 paru -S --needed "${packages[@]}"

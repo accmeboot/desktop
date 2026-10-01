@@ -10,7 +10,6 @@ makedepends=(wayland-protocols)
 provides=(dwl wayland-compositor)
 conflicts=(dwl)
 
-# Order matters: later patches apply on top of earlier ones.
 _patches=(
   ipc.patch
   gaps.patch
@@ -24,7 +23,6 @@ source=("https://codeberg.org/dwl/dwl/releases/download/v$pkgver/dwl-v$pkgver.ta
         dwl-session
         dwl.desktop
         "${_patches[@]}")
-# local files are tracked by git; only the upstream tarball is checked
 sha256sums=('51ed5da49942ca3272b6f2c4f1d7641b0b947a6eb1c264dce8a65b4d245596af'
             SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
 
@@ -45,6 +43,5 @@ package() {
   cd dwl-v$pkgver
   make PREFIX=/usr DESTDIR="$pkgdir" install
   install -Dm755 "$srcdir/dwl-session" "$pkgdir/usr/bin/dwl-session"
-  # replaces upstream's dwl.desktop (Exec=dwl) with one that runs dwl-session
   install -Dm644 "$srcdir/dwl.desktop" "$pkgdir/usr/share/wayland-sessions/dwl.desktop"
 }

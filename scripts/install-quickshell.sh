@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Quickshell with mesa-shell and everything mesa-shell uses (see its README).
 set -euo pipefail
 
 if [[ $EUID -eq 0 ]]; then
@@ -10,23 +9,19 @@ fi
 packages=(
   quickshell
 
-  # backends of the Quickshell services mesa-shell uses
   upower
   pipewire
   networkmanager
   bluez
   pam
 
-  # commands mesa-shell runs
-  bluez-utils # bluetoothctl
-  psmisc      # fuser
-  socat       # mesa-dmenu
+  bluez-utils
+  psmisc
+  socat
 )
 
-# -Syu, not -S: installing against a stale package database is a partial upgrade.
 sudo pacman -Syu --needed "${packages[@]}"
 
-# upower is D-Bus activated; these two have to be enabled.
 sudo systemctl enable --now NetworkManager.service bluetooth.service
 
 config="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/mesa-shell"

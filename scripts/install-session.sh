@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# env and autostart are copied once and then belong to the machine, so local
-# edits never touch the repo. Configs that are the same everywhere are
-# symlinked.
 set -euo pipefail
 
 cd "$(dirname "$(readlink -f "$0")")/../session"
@@ -26,7 +23,6 @@ link() {
   ln -sfn "$PWD/$1" "$2"
 }
 
-# XDG_CURRENT_DESKTOP=dwl; xdg-desktop-portal-wlr doesn't list dwl itself.
 link dwl-portals.conf "$config/xdg-desktop-portal/dwl-portals.conf"
 link xdg-desktop-portal-wlr.conf "$config/xdg-desktop-portal-wlr/config"
 link hypridle.conf "$config/hypr/hypridle.conf"

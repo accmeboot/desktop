@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Symlinks the runtime scripts into ~/.local/bin, which dwl-session's
-# ~/.config/dwl/env puts on PATH.
 set -euo pipefail
 
 cd "$(dirname "$(readlink -f "$0")")"
@@ -8,6 +6,8 @@ cd "$(dirname "$(readlink -f "$0")")"
 scripts=(
   screenshot-full.sh
   screenshot-area.sh
+  follow-color-scheme.sh
+  mpv-picker.sh
 )
 
 bin="$HOME/.local/bin"

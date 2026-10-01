@@ -8,8 +8,8 @@ cd "$(dirname "$(readlink -f "$0")")"
 ./scripts/install-aur.sh
 ./scripts/link-scripts.sh
 ./scripts/install-session.sh
+./scripts/install-theme.sh
 
-# Built on first install; afterwards only on request (e.g. after editing config.h).
 build=()
 for pkg in dwl dwlmsg; do
   if pacman -Qq "$pkg-accme" &>/dev/null; then

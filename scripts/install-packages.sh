@@ -2,24 +2,20 @@
 set -euo pipefail
 
 packages=(
-  # makepkg, paru (less is its PKGBUILD review pager)
   base-devel
   git
   less
 
-  # used by config.h keybinds
   ghostty
   wireplumber
   playerctl
   brightnessctl
 
-  # used by scripts/screenshot-*.sh
   grim
   slurp
   wl-clipboard
   libnotify
 
-  # session
   wlr-randr
   hypridle
   wlopm
@@ -27,7 +23,17 @@ packages=(
   xdg-desktop-portal-wlr
   xdg-desktop-portal-gtk
   xdg-utils
+
+  adw-gtk-theme
+  qt5ct
+  qt6ct
+
+  mpv
+  fzf
+  pinta
+  discord
+  thunderbird
+  qbittorrent
 )
 
-# -Syu, not -S: installing against a stale package database is a partial upgrade.
 sudo pacman -Syu --needed "${packages[@]}"

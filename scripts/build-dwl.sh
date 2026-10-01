@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Usage: build-dwl.sh [dwl] [dwlmsg]   (no arguments builds both)
 set -euo pipefail
 
 cd "$(dirname "$(readlink -f "$0")")/.."
@@ -11,8 +10,6 @@ fi
 
 (($#)) || set -- dwl dwlmsg
 
-# -s installs each PKGBUILD's depends/makedepends, -C starts from a clean src/
-# so patches always apply to pristine sources, -f overwrites an earlier build.
 for pkg in "$@"; do
   (cd "$pkg" && makepkg -siCf)
 done
