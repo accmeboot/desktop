@@ -11,6 +11,31 @@
 - thunderbird
 - qbittorrent (Qt, so it takes base16's colors and fonts through qt6ct)
 
+## Arch install
+
+What to pick in `archinstall` for the rest to work; this is how the current machine was installed. Anything not listed (locale, timezone, hostname, kernel) is free, and the user needs sudo. Menu names differ between archinstall versions.
+
+- Disk: the default layout with btrfs, its default subvolumes (`@`, `@home`, `@log`, `@pkg`) and compression; the ESP is mounted at `/boot` (1 GiB)
+- No disk encryption: `boot/mkinitcpio.conf` sets the whole `HOOKS` array, without `encrypt`/`sd-encrypt`
+- Btrfs snapshots: Snapper. archinstall creates the `root` config and enables the timeline and cleanup timers; `install-boot.sh` only creates the config if it's missing
+- Bootloader: Limine, with unified kernel images. `install-boot.sh` replaces both the UKI (with separate kernel and initramfs) and archinstall's `EFI/BOOT/limine.conf`; with UKIs off it should work the same, but that's untested
+- Swap: zram
+- Profile: Minimal. dwl, ly and the apps come from `install.sh`
+- Network: NetworkManager, which mesa-shell uses
+- Audio: pipewire; Bluetooth: on
+- Additional packages: `git` to clone this repo, `vim` as an editor until terminal installs neovim
+
+After the first boot, log in on the TTY and run the installs in this order: `desktop` clones the other two, `base16` renders the palettes that terminal and the desktop read (terminal falls back to its `defaults/` without them):
+
+```sh
+git clone https://github.com/accmeboot/desktop.git ~/desktop
+~/desktop/install.sh
+~/base16/install.sh
+~/terminal/install.sh
+```
+
+Then reboot into ly.
+
 ## Install
 
 - `pacman -Syu`, never `-S`: installing against a stale package database is a partial upgrade

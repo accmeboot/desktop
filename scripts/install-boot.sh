@@ -19,6 +19,7 @@ packages=(
   snapper
   snap-pac
   xxhash
+  plymouth
 )
 
 sudo pacman -Syu --needed "${packages[@]}"
