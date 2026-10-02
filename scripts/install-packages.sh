@@ -25,10 +25,6 @@ packages=(
   xdg-desktop-portal-gtk
   xdg-utils
 
-  adw-gtk-theme
-  qt5ct
-  qt6ct
-
   mpv
   fzf
   pinta

@@ -86,7 +86,7 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 static const char *termcmd[] = { "ghostty", NULL };
-static const char *menucmd[] = { "qs", "-c", "mesa-shell", "ipc", "call", "dmenu", "toggle", NULL };
+static const char *menucmd[] = { "mshell", "dmenu", "toggle", NULL };
 
 static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_p,           spawn,            {.v = menucmd} },
@@ -137,10 +137,10 @@ static const Key keys[] = {
 	{ 0, XKB_KEY_XF86MonBrightnessDown, spawn, SHCMD("brightnessctl set 1%-") },
 	{ 0, XKB_KEY_XF86MonBrightnessUp,   spawn, SHCMD("brightnessctl set 1%+") },
 
-	{ MODKEY, XKB_KEY_a, spawn, SHCMD("qs -c mesa-shell ipc call panel toggle audio") },
-	{ MODKEY, XKB_KEY_s, spawn, SHCMD("qs -c mesa-shell ipc call panel toggle tray") },
-	{ MODKEY, XKB_KEY_q, spawn, SHCMD("qs -c mesa-shell ipc call panel toggle control") },
-	{ MODKEY, XKB_KEY_bracketleft, spawn, SHCMD("qs -c mesa-shell ipc call notifications dismissLast") },
+	{ MODKEY, XKB_KEY_a, spawn, SHCMD("mshell panel toggle audio") },
+	{ MODKEY, XKB_KEY_s, spawn, SHCMD("mshell panel toggle tray") },
+	{ MODKEY, XKB_KEY_q, spawn, SHCMD("mshell panel toggle control") },
+	{ MODKEY, XKB_KEY_bracketleft, spawn, SHCMD("mshell notifications dismissLast") },
 
 	{ 0,                  XKB_KEY_Print, spawn, SHCMD("screenshot-full.sh") },
 	{ WLR_MODIFIER_SHIFT, XKB_KEY_Print, spawn, SHCMD("screenshot-area.sh") },

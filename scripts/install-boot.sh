@@ -43,5 +43,25 @@ paru -S --needed limine-mkinitcpio-hook limine-snapper-sync
 
 sudo install -Dm644 mkinitcpio.conf /etc/mkinitcpio.conf.d/limine.conf
 sudo limine-update
+
+# archinstall boots a UKI built by the stock mkinitcpio preset, from an entry
+# above the generated ones; limine-mkinitcpio-hook replaces that preset, so the
+# UKI is never rebuilt and stops booting after the next kernel update
+conf=$(mktemp)
+sudo cat /boot/limine.conf | awk '
+  function flush() {
+    if (block !~ /boot\(\):\/EFI\/Linux\/arch-linux(-fallback)?\.efi/) printf "%s", block
+    block = ""
+  }
+  /^\// { flush() }
+  { block = block $0 "\n" }
+  END { flush() }
+' >"$conf"
+if ! sudo cmp -s "$conf" /boot/limine.conf; then
+  sudo install -m600 "$conf" /boot/limine.conf
+fi
+rm -f "$conf"
+sudo rm -f /boot/EFI/Linux/arch-linux.efi /boot/EFI/Linux/arch-linux-fallback.efi
+
 sudo systemctl enable --now limine-snapper-sync.service
 sudo limine-snapper-sync

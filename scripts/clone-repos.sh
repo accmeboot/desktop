@@ -6,13 +6,16 @@ if [[ $EUID -eq 0 ]]; then
   exit 1
 fi
 
+# next to this repo
+cd "$(dirname "$(readlink -f "$0")")/../.."
+
 repos=(
   terminal
-  base16
+  mesa-shell
 )
 
 for repo in "${repos[@]}"; do
-  if [[ ! -d $HOME/$repo ]]; then
-    git clone "https://github.com/accmeboot/$repo.git" "$HOME/$repo"
+  if [[ ! -d $repo ]]; then
+    git clone "https://github.com/accmeboot/$repo.git" "$repo"
   fi
 done

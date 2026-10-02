@@ -6,7 +6,6 @@ cd "$(dirname "$(readlink -f "$0")")"
 scripts=(
   screenshot-full.sh
   screenshot-area.sh
-  follow-color-scheme.sh
   mpv-picker.sh
 )
 

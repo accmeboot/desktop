@@ -25,13 +25,12 @@ What to pick in `archinstall` for the rest to work; this is how the current mach
 - Audio: pipewire; Bluetooth: on
 - Additional packages: `git` to clone this repo, `vim` as an editor until terminal installs neovim
 
-After the first boot, log in on the TTY and run the installs in this order: `desktop` clones the other two, `base16` renders the palettes that terminal and the desktop read (terminal falls back to its `defaults/` without them):
+After the first boot, log in on the TTY and run the installs in this order: `desktop` clones the other two and runs mesa-shell's install, which renders the palettes that terminal and the desktop read (terminal falls back to its `defaults/` without them):
 
 ```sh
-git clone https://github.com/accmeboot/desktop.git ~/desktop
-~/desktop/install.sh
-~/base16/install.sh
-~/terminal/install.sh
+git clone https://github.com/accmeboot/desktop.git ~/setup/desktop
+~/setup/desktop/install.sh
+~/setup/terminal/install.sh
 ```
 
 Then reboot into ly.
@@ -41,8 +40,8 @@ Then reboot into ly.
 - `pacman -Syu`, never `-S`: installing against a stale package database is a partial upgrade
 - dwl and dwlmsg are built on the first install; afterwards `install.sh` asks, since a rebuild is only needed after editing `config.h` or the patches
 - `scripts/link-scripts.sh` links the runtime scripts into `~/.local/bin`, which `~/.config/dwl/env` puts on `PATH`
-- `scripts/install-quickshell.sh` installs Quickshell with everything mesa-shell uses (see its README) and clones mesa-shell into `~/.config/quickshell/mesa-shell`; upower is D-Bus activated, NetworkManager and bluetooth have to be enabled
-- `scripts/clone-repos.sh` clones [terminal](https://github.com/accmeboot/terminal) and [base16](https://github.com/accmeboot/base16) into `~/terminal` and `~/base16` if they are missing; each has its own `install.sh`, which this one does not run
+- mesa-shell's `install.sh` (run by this one) installs Quickshell with everything mesa-shell uses, enables NetworkManager and bluetooth (upower is D-Bus activated), links it into `~/.config/quickshell` and `mshell` into `~/.local/bin`, and builds the palettes
+- `scripts/clone-repos.sh` clones [terminal](https://github.com/accmeboot/terminal) and [mesa-shell](https://github.com/accmeboot/mesa-shell) next to this repo (`~/setup/terminal` and `~/setup/mesa-shell`) if they are missing; terminal's `install.sh` is not run by this one
 
 ### AUR
 
@@ -61,8 +60,7 @@ Then reboot into ly.
 - Limine reads `limine.conf` next to the EFI binary before the one at the ESP root, and the tools only write the root one, so an existing `/boot/EFI/BOOT/limine.conf` is moved there. Installing `limine-mkinitcpio-hook` already writes entries, so the config and the move come before it
 - `boot/mkinitcpio.conf` goes to `/etc/mkinitcpio.conf.d/` and adds `btrfs-overlayfs` after `filesystems`: snapshots are read-only, and the overlay gives the booted one a writable layer in RAM so the session can start. It is the busybox variant, matching the hooks; with `systemd` in `HOOKS` it would be `sd-btrfs-overlayfs`. The drop-in replaces the whole `HOOKS` array. It is installed after the hook package, since mkinitcpio fails on a hook it doesn't have
 - `limine-snapper-restore --notify` and `limine-snapper-notify` start from `autostart`, since dwl doesn't run XDG autostart: the first offers "Restore now" when booted into a snapshot and exits otherwise, the second shows limine-snapper-sync's errors (e.g. the ESP is full). The restore prompt is sent once and only at login, so it waits until a notification server (mesa-shell) owns `org.freedesktop.Notifications`, which takes a moment after `qs` starts
-
-Once the new entry and a snapshot entry have booted, remove by hand: the old entry in `/boot/limine.conf`, `/boot/EFI/Linux/arch-linux.efi`, and the `default_uki` line in `/etc/mkinitcpio.d/linux.preset`. The old UKI stops booting at the next kernel update anyway, as its modules are gone.
+- archinstall's UKI entry and `/boot/EFI/Linux/arch-linux{,-fallback}.efi` are removed after `limine-update` has written the new entry. The entry sits above the generated ones, so Limine boots it by default, and with `linux.preset` no longer run the UKI is never rebuilt: it stops booting at the next kernel update, as its modules are gone
 
 ### Login
 
@@ -94,7 +92,7 @@ The patches in `dwl/PKGBUILD` apply in order, each on top of the previous. Only 
 `dwl-session` is what the greeter starts through `dwl.desktop`. Host-specific setup stays out of the package, in two optional files copied from `session/` by `install.sh` if missing; afterwards they belong to the machine, so local edits never touch the repo:
 
 - `~/.config/dwl/env`: sourced before dwl starts; exported variables reach dwl and everything it spawns (`PATH`, `QT_QPA_PLATFORMTHEME`, `WLR_DRM_DEVICES`, ...). On a hybrid GPU laptop, `export WLR_DRM_DEVICES=/dev/dri/by-path/<iGPU>-card` (from `ls -l /dev/dri/by-path`) runs dwl on the iGPU
-- `~/.config/dwl/autostart`: executable, run once dwl is up; background long-running programs with `&`. They are in dwl's startup process group and get SIGTERM when dwl exits. Typical lines: `qs -c mesa-shell &`, `wlr-randr --output DP-2 --mode 2560x1440@239.970001Hz`
+- `~/.config/dwl/autostart`: executable, run once dwl is up; background long-running programs with `&`. They are in dwl's startup process group and get SIGTERM when dwl exits. Typical lines: `mshell run &`, `wlr-randr --output DP-2 --mode 2560x1440@239.970001Hz`
 
 dwl writes its status to the startup command's stdin; nothing reads it, so `dwl-session` closes it, or dwl would block once the pipe buffer fills. Portals are D-Bus activated by systemd and only see `WAYLAND_DISPLAY` through the activation environment, so `dwl-session` exports it there. On exit it stops the portals, which would otherwise outlive the compositor and keep a dead `WAYLAND_DISPLAY`.
 
@@ -102,11 +100,4 @@ The configs that are the same everywhere are symlinked instead. `dwl-portals.con
 
 ## Theming
 
-Colors come from [base16](../base16), which renders a dark and a light palette. The desktop's `color-scheme` setting (`org.gnome.desktop.interface`) decides which one is shown; mesa-shell's dark theme toggle writes it.
-
-- GTK4 / libadwaita: `~/.config/gtk-4.0/gtk.css` imports both palettes, each wrapped in `@media (prefers-color-scheme: ...)`, so GTK picks the right one itself
-- GTK3 has no color-scheme preference, so each polarity is its own theme, `base16-dark` / `base16-light`: adw-gtk3 with base16's colors on top
-- Qt: qt5ct/qt6ct (`QT_QPA_PLATFORMTHEME=qt5ct`; qt6ct answers to that name too); `qt5ct.conf`/`qt6ct.conf` link to base16's `qtct.conf` for the polarity, which sets the color scheme, icon theme and fonts
-- fonts: `~/.config/fontconfig/fonts.conf` includes base16's `fonts.conf`, which puts the configured fonts in front of sans-serif/serif/monospace. It inserts them right before the generic name, not at the head of the list, so a font an app asks for by name still wins
-
-`scripts/follow-color-scheme.sh`, started from autostart, switches the GTK3 theme and the icon theme (base16's `icon-theme` for the polarity) and relinks the qt5ct/qt6ct configs when the setting changes; qt*ct reload on their own when a file in their config directory is replaced, so a font change from `base16 build` reaches running Qt apps on the next switch or restart. `scripts/install-theme.sh` writes the GTK3 themes every time, and the GTK4 and fontconfig configs only if missing.
+mesa-shell owns the theming (see its README): `mshell build` renders a dark and a light palette, and the shell points GTK3, Qt and the icon theme at the polarity the desktop's `color-scheme` setting picks. `~/.config/dwl/env` sets `QT_QPA_PLATFORMTHEME=qt5ct` so Qt apps read the qt5ct/qt6ct configs it links (qt6ct answers to that name too).

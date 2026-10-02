@@ -4,14 +4,13 @@ set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
 ./scripts/install-packages.sh
-./scripts/install-quickshell.sh
 ./scripts/clone-repos.sh
+../mesa-shell/install.sh
 ./scripts/install-aur.sh
 ./scripts/install-boot.sh
 ./scripts/link-scripts.sh
 ./scripts/install-session.sh
 ./scripts/install-ly.sh
-./scripts/install-theme.sh
 
 build=()
 for pkg in dwl dwlmsg; do
