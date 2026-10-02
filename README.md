@@ -106,7 +106,7 @@ Colors come from [base16](../base16), which renders a dark and a light palette. 
 
 - GTK4 / libadwaita: `~/.config/gtk-4.0/gtk.css` imports both palettes, each wrapped in `@media (prefers-color-scheme: ...)`, so GTK picks the right one itself
 - GTK3 has no color-scheme preference, so each polarity is its own theme, `base16-dark` / `base16-light`: adw-gtk3 with base16's colors on top
-- Qt: qt5ct/qt6ct (`QT_QPA_PLATFORMTHEME=qt5ct`; qt6ct answers to that name too); `qt5ct.conf`/`qt6ct.conf` link to base16's `qtct.conf` for the polarity, which sets the color scheme and fonts
+- Qt: qt5ct/qt6ct (`QT_QPA_PLATFORMTHEME=qt5ct`; qt6ct answers to that name too); `qt5ct.conf`/`qt6ct.conf` link to base16's `qtct.conf` for the polarity, which sets the color scheme, icon theme and fonts
 - fonts: `~/.config/fontconfig/fonts.conf` includes base16's `fonts.conf`, which puts the configured fonts in front of sans-serif/serif/monospace. It inserts them right before the generic name, not at the head of the list, so a font an app asks for by name still wins
 
-`scripts/follow-color-scheme.sh`, started from autostart, switches the GTK3 theme and relinks the qt5ct/qt6ct configs when the setting changes; qt*ct reload on their own when a file in their config directory is replaced, so a font change from `base16 build` reaches running Qt apps on the next switch or restart. `scripts/install-theme.sh` writes the GTK3 themes every time, and the GTK4 and fontconfig configs only if missing.
+`scripts/follow-color-scheme.sh`, started from autostart, switches the GTK3 theme and the icon theme (base16's `icon-theme` for the polarity) and relinks the qt5ct/qt6ct configs when the setting changes; qt*ct reload on their own when a file in their config directory is replaced, so a font change from `base16 build` reaches running Qt apps on the next switch or restart. `scripts/install-theme.sh` writes the GTK3 themes every time, and the GTK4 and fontconfig configs only if missing.
