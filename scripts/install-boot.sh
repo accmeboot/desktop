@@ -46,13 +46,17 @@ sudo limine-update
 
 # archinstall boots a UKI built by the stock mkinitcpio preset, from an entry
 # above the generated ones; limine-mkinitcpio-hook replaces that preset, so the
-# UKI is never rebuilt and stops booting after the next kernel update
+# UKI is never rebuilt and stops booting after the next kernel update.
+# Entry 1 is then the expanded "/+Arch Linux" directory, which the timeout
+# can't boot, so default to entry 2: its first kernel
 conf=$(mktemp)
 sudo cat /boot/limine.conf | awk '
   function flush() {
     if (block !~ /boot\(\):\/EFI\/Linux\/arch-linux(-fallback)?\.efi/) printf "%s", block
     block = ""
   }
+  NR == 1 { print "default_entry: 2" }
+  /^default_entry:/ { next }
   /^\// { flush() }
   { block = block $0 "\n" }
   END { flush() }
