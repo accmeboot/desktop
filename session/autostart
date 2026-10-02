@@ -1,3 +1,7 @@
 #!/bin/sh
 hypridle &
 follow-color-scheme.sh &
+qs -c mesa-shell &
+(until busctl --user status org.freedesktop.Notifications >/dev/null 2>&1; do sleep 0.5; done
+ limine-snapper-restore --notify) &
+limine-snapper-notify &

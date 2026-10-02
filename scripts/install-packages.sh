@@ -17,6 +17,7 @@ packages=(
   libnotify
 
   wlr-randr
+  ly
   hypridle
   wlopm
   xdg-desktop-portal
