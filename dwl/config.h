@@ -24,7 +24,7 @@ static const float fullscreen_bg[]         = {0.0f, 0.0f, 0.0f, 1.0f};
 static int log_level = WLR_ERROR;
 
 static const Rule rules[] = {
-	{ NULL,               NULL,       0,            0,           -1 },
+	{ "mshell.wall",      NULL,       0,            1,           -1 },
 };
 
 static const Layout layouts[] = {
@@ -141,6 +141,8 @@ static const Key keys[] = {
 	{ MODKEY, XKB_KEY_s, spawn, SHCMD("mshell panel toggle tray") },
 	{ MODKEY, XKB_KEY_q, spawn, SHCMD("mshell panel toggle control") },
 	{ MODKEY, XKB_KEY_bracketleft, spawn, SHCMD("mshell notifications dismissLast") },
+	{ MODKEY,                    XKB_KEY_w, spawn, SHCMD("ghostty --class=mshell.wall -e mshell wall dark") },
+	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_w, spawn, SHCMD("ghostty --class=mshell.wall -e mshell wall light") },
 
 	{ 0,                  XKB_KEY_Print, spawn, SHCMD("screenshot-full.sh") },
 	{ WLR_MODIFIER_SHIFT, XKB_KEY_Print, spawn, SHCMD("screenshot-area.sh") },

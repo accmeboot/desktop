@@ -1,5 +1,4 @@
-Separate mouse/touchpad libinput settings, touchpad scroll factor and
-disabling pointer devices by name. Applies on top of ipc.patch + gaps.patch.
+Separate mouse/touchpad settings, touchpad scroll factor, disabled devices.
 
 diff --git a/dwl.c b/dwl.c
 index f93ab78..0b45393 100644
@@ -27,7 +26,7 @@ index f93ab78..0b45393 100644
  }
  
  void
-@@ -1272,8 +1275,11 @@ void
+@@ -1272,10 +1275,13 @@ void
  createpointer(struct wlr_pointer *pointer)
  {
  	struct libinput_device *device;
@@ -36,9 +35,12 @@ index f93ab78..0b45393 100644
  	if (wlr_input_device_is_libinput(&pointer->base)
  			&& (device = wlr_libinput_get_device_handle(&pointer->base))) {
 +		istouchpad = libinput_device_config_tap_get_finger_count(device) > 0;
- 
- 		if (libinput_device_config_tap_get_finger_count(device)) {
+
+-		if (libinput_device_config_tap_get_finger_count(device)) {
++		if (istouchpad) {
  			libinput_device_config_tap_set_enabled(device, tap_to_click);
+ 			libinput_device_config_tap_set_drag_enabled(device, tap_and_drag);
+ 			libinput_device_config_tap_set_drag_lock_enabled(device, drag_lock);
 @@ -1283,7 +1289,8 @@ createpointer(struct wlr_pointer *pointer)
  		}
  

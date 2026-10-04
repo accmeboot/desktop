@@ -1,4 +1,4 @@
-gaps, rebased onto dwl 0.9 + ipc.patch (dwl.c only; config.def.h hunks dropped).
+gaps, rebased onto ipc.patch.
 Source: https://codeberg.org/dwl/dwl-patches/src/branch/main/patches/gaps/gaps.patch
 
 diff --git a/dwl.c b/dwl.c
