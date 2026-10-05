@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=dwl
-Comment=Dynamic window manager for Wayland
-Exec=dwl-session
-Type=Application
-DesktopNames=dwl

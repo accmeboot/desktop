@@ -5,6 +5,10 @@ packages=(
   base-devel
   git
   less
+  stow
+
+  sway
+  xorg-xwayland
 
   ghostty
   wireplumber
@@ -16,10 +20,8 @@ packages=(
   wl-clipboard
   libnotify
 
-  wlr-randr
   ly
   hypridle
-  wlopm
   xdg-desktop-portal
   xdg-desktop-portal-wlr
   xdg-desktop-portal-gtk
