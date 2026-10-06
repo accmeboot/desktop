@@ -138,6 +138,7 @@ bindsym --locked XF86MonBrightnessDown exec brightnessctl set 1%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 1%+
 
 bindsym $mod+p exec mshell panel toggle audio
+bindsym $mod+Shift+p exec mshell panel toggle microphone
 bindsym $mod+n exec mshell panel toggle network
 bindsym $mod+c exec mshell panel toggle bluetooth
 bindsym $mod+t exec mshell panel toggle tray
