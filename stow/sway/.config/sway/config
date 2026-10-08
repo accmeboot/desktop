@@ -21,8 +21,8 @@ for_window [app_id="mshell.wall"] floating enable
 input type:keyboard {
     xkb_layout us,ru
     xkb_options grp:alt_shift_toggle,ctrl:swap_rwin_rctl
-    repeat_rate 25
-    repeat_delay 600
+    repeat_rate 30
+    repeat_delay 300
 }
 
 input type:touchpad {
