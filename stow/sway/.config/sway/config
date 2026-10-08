@@ -8,12 +8,10 @@ set $menu mshell dmenu toggle
 
 include /etc/sway/config.d/*
 
-default_border pixel 2
-default_floating_border pixel 2
+default_border normal 2
+default_floating_border normal 2
 gaps inner 8
-font pango:monospace 0.1
-titlebar_padding 1
-titlebar_border_thickness 0
+font pango:monospace 12
 floating_modifier $mod normal
 
 include ~/.local/state/mshell/current/sway
