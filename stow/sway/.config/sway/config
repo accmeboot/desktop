@@ -17,6 +17,7 @@ floating_modifier $mod normal
 include ~/.local/state/mshell/current/sway
 
 for_window [app_id="mshell.wall"] floating enable
+for_window [app_id="scratch.yazi"] floating enable, move scratchpad
 
 input type:keyboard {
     xkb_layout us,ru
@@ -155,5 +156,6 @@ exec hypridle
 exec mshell run
 exec sh -c 'until busctl --user status org.freedesktop.Notifications >/dev/null 2>&1; do sleep 0.5; done; limine-snapper-restore --notify'
 exec limine-snapper-notify
+exec $term --class=scratch.yazi --working-directory=home -e yazi
 
 include ~/.config/sway/local
