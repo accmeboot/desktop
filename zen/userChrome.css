@@ -1,0 +1,29 @@
+* {
+  --zen-border-radius: 0px !important;
+  --tab-border-radius: 0px !important;
+  --toolbarbutton-border-radius: 0px !important;
+  --border-radius-small: 0px !important;
+  --border-radius-medium: 0px !important;
+  --border-radius-large: 0px !important;
+}
+
+:root #urlbar {
+  --urlbar-icon-border-radius: 0px !important;
+  --urlbar-inner-border-radius: 0px !important;
+}
+
+.tab-background,
+.urlbarView,
+:root #urlbar,
+:root #urlbar .urlbar-background,
+:root #urlbar[breakout-extend],
+:root #urlbar[breakout-extend] .urlbar-background,
+:root #urlbar[zen-floating-urlbar="true"],
+:root #urlbar[zen-floating-urlbar="true"] .urlbar-background,
+:root #urlbar-container,
+:root #tabs-newtab-button,
+:root #tabs-newtab-button > *,
+:root #vertical-tabs-newtab-button,
+:root #vertical-tabs-newtab-button > * {
+  border-radius: 0 !important;
+}
