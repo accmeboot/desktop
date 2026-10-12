@@ -11,6 +11,7 @@ include /etc/sway/config.d/*
 default_border normal 2
 default_floating_border normal 2
 gaps inner 8
+gaps outer 14
 font pango:monospace 12
 floating_modifier $mod normal
 
