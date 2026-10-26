@@ -143,6 +143,7 @@ bindsym $mod+Shift+p exec mshell panel toggle microphone
 bindsym $mod+n exec mshell panel toggle network
 bindsym $mod+c exec mshell panel toggle bluetooth
 bindsym $mod+t exec mshell panel toggle tray
+bindsym $mod+Tab exec mshell panel toggle windows
 bindsym $mod+q exec mshell panel toggle control
 bindsym $mod+grave exec mshell theme toggle
 bindsym $mod+backslash exec mshell notifications toggle
